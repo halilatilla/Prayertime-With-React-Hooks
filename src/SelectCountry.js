@@ -1,13 +1,24 @@
 import React, { Component } from "react";
-//import SelectCity from "./SelectCity";
-import { Container, Row, Col } from "reactstrap";
+import SelectCity from "./SelectCity";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
+import styled from "styled-components";
 
-export default class AllTimes extends Component {
+const Wrapper = styled.section`
+  display: flex;
+  justify-content: center;
+`;
+
+export default class SelectCountry extends Component {
   state = {
     data: [],
+    countryName: "",
     cities: [],
-    subCities: [],
-    prayerTimes: []
+    dropdownOpen: false
   };
 
   componentDidMount() {
@@ -23,87 +34,52 @@ export default class AllTimes extends Component {
       });
   }
 
-  getCities(countryId) {
+  getCities(countryId, countryName) {
     fetch(`https://ezanvakti.herokuapp.com/sehirler?ulke=${countryId}`)
       .then(res => res.json())
       .then(cities => {
         this.setState({
-          cities
+          cities,
+          countryName
         });
       });
   }
 
-  getSubCities(cityId) {
-    fetch(`https://ezanvakti.herokuapp.com/ilceler?sehir=${cityId}`)
-      .then(res => res.json())
-      .then(subCities => {
-        this.setState({
-          subCities
-        });
-      });
-  }
-
-  getPrayerTimes(subcityId) {
-    fetch(`https://ezanvakti.herokuapp.com/vakitler?ilce=${subcityId}`)
-      .then(res => res.json())
-      .then(prayerTimes => {
-        this.setState({
-          prayerTimes
-        });
-      });
-  }
+  toggle = () => {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen
+    }));
+  };
 
   render() {
-    console.log(this.state.prayerTimes[0]);
-
     return (
-      <Container>
-        <Row>
-          <Col>
-            Country Id : {this.state.countryId}
+      <Wrapper>
+        <Dropdown
+          style={{ display: "flex" }}
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggle}
+        >
+          <DropdownToggle caret>
+            {this.state.countryName.length > 0 ? (
+              this.state.countryName
+            ) : (
+              <div>Select Country</div>
+            )}
+          </DropdownToggle>
+          <DropdownMenu>
             {this.state.data.map(country => (
               <div
-                onClick={() => this.getCities(country.UlkeID)}
+                onClick={() => this.getCities(country.UlkeID, country.UlkeAdi)}
                 key={country.UlkeID}
               >
-                {country.UlkeAdi}
-                {country.UlkeID}
+                <DropdownItem>{country.UlkeAdi}</DropdownItem>
               </div>
             ))}
-          </Col>
-          <Col>
-            {this.state.cities.map(cities => (
-              <div
-                onClick={() => this.getSubCities(cities.SehirID)}
-                key={cities.SehirID}
-              >
-                SubCity Name {cities.SehirAdi}
-              </div>
-            ))}
-          </Col>
-          <Col>
-            {this.state.subCities.map(subcity => (
-              <div
-                key={subcity.IlceID}
-                onClick={() => this.getPrayerTimes(subcity.IlceID)}
-              >
-                {" "}
-                {subcity.IlceAdi}{" "}
-              </div>
-            ))}
-          </Col>
-          <Col>
-            {this.state.prayerTimes.map(prayers => (
-              <div key={prayers.MiladiTarihUzunIso8601}>
-                Aksam {prayers.Aksam}
-              </div>
-            ))}
-            {this.state.prayerTimes.length > 0
-              ? this.state.prayerTimes[0].Aksam
-              : null}
-          </Col>
-        </Row>
-      </Container>
+          </DropdownMenu>
+        </Dropdown>
+
+        <SelectCity cities={this.state.cities} />
+      </Wrapper>
     );
   }
 }

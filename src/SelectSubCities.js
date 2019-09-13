@@ -5,32 +5,31 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import SelectSubCities from "./SelectSubCities";
+import ShowTimes from "./ShowTimes";
 import styled from "styled-components";
 
 const Wrapper = styled.section`
-  display: flex;
-  justify-content: center;
   margin-left: 2vw;
 `;
 
-export default class SelectCity extends Component {
+export default class SelectSubCities extends Component {
   state = {
-    cityName: "",
-    subCities: [],
+    prayerTimes: [],
+    subcityName: "",
     dropdownOpen: false
   };
 
-  getSubCities(cityId, cityName) {
-    fetch(`https://ezanvakti.herokuapp.com/ilceler?sehir=${cityId}`)
+  getPrayerTimes(subcityId, subcityName) {
+    fetch(`https://ezanvakti.herokuapp.com/vakitler?ilce=${subcityId}`)
       .then(res => res.json())
-      .then(subCities => {
+      .then(prayerTimes => {
         this.setState({
-          subCities,
-          cityName
+          prayerTimes,
+          subcityName
         });
       });
   }
+
   toggle = () => {
     this.setState(prevState => ({
       dropdownOpen: !prevState.dropdownOpen
@@ -41,27 +40,27 @@ export default class SelectCity extends Component {
       <Wrapper>
         <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
           <DropdownToggle caret>
-            {this.state.cityName.length > 0 ? (
-              this.state.cityName
+            {this.state.subcityName.length > 0 ? (
+              this.state.subcityName
             ) : (
-              <div>Select City</div>
+              <div>Select SubCity</div>
             )}
           </DropdownToggle>
           <DropdownMenu>
-            {this.props.cities.map(cities => (
+            {this.props.subCities.map(subCities => (
               <div
                 onClick={() =>
-                  this.getSubCities(cities.SehirID, cities.SehirAdi)
+                  this.getPrayerTimes(subCities.IlceID, subCities.IlceAdi)
                 }
-                key={cities.SehirID}
+                key={subCities.IlceID}
               >
-                <DropdownItem>{cities.SehirAdi}</DropdownItem>
+                <DropdownItem>{subCities.IlceAdi}</DropdownItem>
               </div>
             ))}
           </DropdownMenu>
         </Dropdown>
 
-        <SelectSubCities subCities={this.state.subCities} />
+        <ShowTimes prayerTimes={this.state.prayerTimes} />
       </Wrapper>
     );
   }
