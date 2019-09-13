@@ -1,10 +1,4 @@
 import React, { Component } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
 import SelectSubCities from "./SelectSubCities";
 import styled from "styled-components";
 
@@ -16,51 +10,32 @@ const Wrapper = styled.section`
 
 export default class SelectCity extends Component {
   state = {
-    cityName: "",
-    subCities: [],
-    dropdownOpen: false
+    subCities: []
   };
 
-  getSubCities(cityId, cityName) {
+  getSubCities(cityId) {
     fetch(`https://ezanvakti.herokuapp.com/ilceler?sehir=${cityId}`)
       .then(res => res.json())
       .then(subCities => {
         this.setState({
-          subCities,
-          cityName
+          subCities
         });
       });
   }
-  toggle = () => {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+
+  chanceHandle = () => {
+    this.getSubCities(this.refs.selector.value);
   };
   render() {
     return (
       <Wrapper>
-        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-          <DropdownToggle caret>
-            {this.state.cityName.length > 0 ? (
-              this.state.cityName
-            ) : (
-              <div>Select City</div>
-            )}
-          </DropdownToggle>
-          <DropdownMenu>
-            {this.props.cities.map(cities => (
-              <div
-                onClick={() =>
-                  this.getSubCities(cities.SehirID, cities.SehirAdi)
-                }
-                key={cities.SehirID}
-              >
-                <DropdownItem>{cities.SehirAdi}</DropdownItem>
-              </div>
-            ))}
-          </DropdownMenu>
-        </Dropdown>
-
+        <select ref="selector" onChange={e => this.chanceHandle()}>
+          {this.props.cities.map(cities => (
+            <option key={cities.SehirID} value={cities.SehirID}>
+              {cities.SehirAdi}
+            </option>
+          ))}
+        </select>
         <SelectSubCities subCities={this.state.subCities} />
       </Wrapper>
     );

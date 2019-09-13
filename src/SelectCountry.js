@@ -1,11 +1,5 @@
 import React, { Component } from "react";
 import SelectCity from "./SelectCity";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
 import styled from "styled-components";
 
 const Wrapper = styled.section`
@@ -16,9 +10,8 @@ const Wrapper = styled.section`
 export default class SelectCountry extends Component {
   state = {
     data: [],
-    countryName: "",
     cities: [],
-    dropdownOpen: false
+    defaultCountryId: "2"
   };
 
   componentDidMount() {
@@ -34,49 +27,37 @@ export default class SelectCountry extends Component {
       });
   }
 
-  getCities(countryId, countryName) {
+  getCities(countryId) {
     fetch(`https://ezanvakti.herokuapp.com/sehirler?ulke=${countryId}`)
       .then(res => res.json())
       .then(cities => {
         this.setState({
-          cities,
-          countryName
+          cities
         });
       });
   }
 
-  toggle = () => {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+  chanceHandle = () => {
+    this.getCities(this.refs.selector.value);
+    this.setState({
+      defaultCountryId: this.refs.selector.value
+    });
   };
 
   render() {
     return (
       <Wrapper>
-        <Dropdown
-          style={{ display: "flex" }}
-          isOpen={this.state.dropdownOpen}
-          toggle={this.toggle}
+        <select
+          ref="selector"
+          value={this.state.defaultCountryId}
+          onChange={e => this.chanceHandle()}
         >
-          <DropdownToggle caret>
-            {this.state.countryName.length > 0 ? (
-              this.state.countryName
-            ) : (
-              <div>Select Country</div>
-            )}
-          </DropdownToggle>
-          <DropdownMenu>
-            {this.state.data.map(country => (
-              <div
-                onClick={() => this.getCities(country.UlkeID, country.UlkeAdi)}
-                key={country.UlkeID}
-              >
-                <DropdownItem>{country.UlkeAdi}</DropdownItem>
-              </div>
-            ))}
-          </DropdownMenu>
-        </Dropdown>
+          {this.state.data.map(country => (
+            <option key={country.UlkeID} value={country.UlkeID}>
+              {country.UlkeAdi}
+            </option>
+          ))}
+        </select>
 
         <SelectCity cities={this.state.cities} />
       </Wrapper>

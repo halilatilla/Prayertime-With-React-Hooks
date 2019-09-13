@@ -1,10 +1,4 @@
 import React, { Component } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
 import ShowTimes from "./ShowTimes";
 import styled from "styled-components";
 
@@ -14,53 +8,35 @@ const Wrapper = styled.section`
 
 export default class SelectSubCities extends Component {
   state = {
-    prayerTimes: [],
-    subcityName: "",
-    dropdownOpen: false
+    prayerTimes: []
   };
 
-  getPrayerTimes(subcityId, subcityName) {
+  getPrayerTimes(subcityId) {
     fetch(`https://ezanvakti.herokuapp.com/vakitler?ilce=${subcityId}`)
       .then(res => res.json())
       .then(prayerTimes => {
         this.setState({
-          prayerTimes,
-          subcityName
+          prayerTimes
         });
       });
   }
 
-  toggle = () => {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
+  chanceHandle = () => {
+    this.getPrayerTimes(this.refs.selector.value);
   };
   render() {
     return (
       <Wrapper>
-        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-          <DropdownToggle caret>
-            {this.state.subcityName.length > 0 ? (
-              this.state.subcityName
-            ) : (
-              <div>Select SubCity</div>
-            )}
-          </DropdownToggle>
-          <DropdownMenu>
-            {this.props.subCities.map(subCities => (
-              <div
-                onClick={() =>
-                  this.getPrayerTimes(subCities.IlceID, subCities.IlceAdi)
-                }
-                key={subCities.IlceID}
-              >
-                <DropdownItem>{subCities.IlceAdi}</DropdownItem>
-              </div>
-            ))}
-          </DropdownMenu>
-        </Dropdown>
-
-        <ShowTimes prayerTimes={this.state.prayerTimes} />
+        <select ref="selector" onChange={e => this.chanceHandle()}>
+          {this.props.subCities.map(subCities => (
+            <option key={subCities.IlceID} value={subCities.IlceID}>
+              {subCities.IlceAdi}
+            </option>
+          ))}
+        </select>
+        {this.state.prayerTimes.length > 0 && (
+          <ShowTimes prayerTimes={this.state.prayerTimes} />
+        )}
       </Wrapper>
     );
   }
