@@ -11,6 +11,7 @@ const Wrapper = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: beige;
 `;
 
 export default function ShowTimes({ prayerTimes }) {
