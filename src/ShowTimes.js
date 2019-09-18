@@ -11,7 +11,7 @@ const Wrapper = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: beige;
+  background-color: bisque;
 `;
 
 export default function ShowTimes({ prayerTimes }) {
@@ -33,10 +33,8 @@ export default function ShowTimes({ prayerTimes }) {
           <tr>
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Imsak : null}</td>
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Gunes : null}</td>
-
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Ogle : null}</td>
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Ikindi : null}</td>
-
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Aksam : null}</td>
             <td>{prayerTimes.length > 0 ? prayerTimes[0].Yatsi : null}</td>
           </tr>

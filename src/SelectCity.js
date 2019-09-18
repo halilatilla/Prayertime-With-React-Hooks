@@ -30,6 +30,8 @@ export default class SelectCity extends Component {
     return (
       <Wrapper>
         <select ref="selector" onChange={e => this.chanceHandle()}>
+          <option>Select City</option>
+
           {this.props.cities.map(cities => (
             <option key={cities.SehirID} value={cities.SehirID}>
               {cities.SehirAdi}

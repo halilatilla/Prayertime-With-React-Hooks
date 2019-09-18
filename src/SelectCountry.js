@@ -11,11 +11,15 @@ export default class SelectCountry extends Component {
   state = {
     data: [],
     cities: [],
-    defaultCountryId: "2"
+    defaultCountryId: ""
   };
 
   componentDidMount() {
     this.getCountries();
+    /*  localStorage.setItem(
+      "data",
+      this.state.data > 0 && this.state.data.map(country => country.UlkeAdi)
+    ); */
   }
   getCountries() {
     fetch("https://ezanvakti.herokuapp.com/ulkeler")
@@ -47,12 +51,8 @@ export default class SelectCountry extends Component {
   render() {
     return (
       <Wrapper>
-        <select
-          ref="selector"
-          value={this.state.defaultCountryId}
-          onChange={e => this.chanceHandle()}
-        >
-          Select Country
+        <select ref="selector" onChange={e => this.chanceHandle()}>
+          <option>Select Country</option>
           {this.state.data.map(country => (
             <option key={country.UlkeID} value={country.UlkeID}>
               {country.UlkeAdi}
