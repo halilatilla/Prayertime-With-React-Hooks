@@ -10,8 +10,7 @@ const Wrapper = styled.section`
 export default class SelectCountry extends Component {
   state = {
     data: [],
-    cities: [],
-    defaultCountryId: ""
+    cities: []
   };
 
   componentDidMount() {
@@ -43,9 +42,6 @@ export default class SelectCountry extends Component {
 
   chanceHandle = () => {
     this.getCities(this.refs.selector.value);
-    this.setState({
-      defaultCountryId: this.refs.selector.value
-    });
   };
 
   render() {
