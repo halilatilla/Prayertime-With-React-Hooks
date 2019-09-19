@@ -10,13 +10,17 @@ const Wrapper = styled.section`
 export default class SelectCountry extends Component {
   state = {
     data: [],
-    cities: []
+    cities: [],
+    defaultCountryId: ""
   };
 
   componentDidMount() {
     this.getCountries();
+    /*  localStorage.setItem(
+      "data",
+      this.state.data > 0 && this.state.data.map(country => country.UlkeAdi)
+    ); */
   }
-
   getCountries() {
     fetch("https://ezanvakti.herokuapp.com/ulkeler")
       .then(res => res.json())
@@ -24,7 +28,6 @@ export default class SelectCountry extends Component {
         this.setState({
           data
         });
-        localStorage.setItem("data", JSON.stringify(data)); //data added to local storage
       });
   }
 
@@ -32,14 +35,17 @@ export default class SelectCountry extends Component {
     fetch(`https://ezanvakti.herokuapp.com/sehirler?ulke=${countryId}`)
       .then(res => res.json())
       .then(cities => {
-        localStorage.setItem("cities", JSON.stringify(cities));
+        this.setState({
+          cities
+        });
       });
-    //countryId added to local storage
   }
 
   chanceHandle = () => {
-    this.getCities(this.refs.selector.value); //selected value sent to func.
-    console.log(JSON.parse(localStorage.getItem("data")));
+    this.getCities(this.refs.selector.value);
+    this.setState({
+      defaultCountryId: this.refs.selector.value
+    });
   };
 
   render() {
@@ -47,26 +53,14 @@ export default class SelectCountry extends Component {
       <Wrapper>
         <select ref="selector" onChange={e => this.chanceHandle()}>
           <option>Select Country</option>
-          {JSON.parse(localStorage.getItem("data"))
-            ? JSON.parse(localStorage.getItem("data")).map(country => (
-                <option key={country.UlkeID} value={country.UlkeID}>
-                  {country.UlkeAdi} - {country.UlkeID}
-                </option>
-              ))
-            : this.state.data.map(country => (
-                <option key={country.UlkeID} value={country.UlkeID}>
-                  {country.UlkeAdi} - {country.UlkeID}
-                </option>
-              ))}
+          {this.state.data.map(country => (
+            <option key={country.UlkeID} value={country.UlkeID}>
+              {country.UlkeAdi}
+            </option>
+          ))}
         </select>
 
-        <SelectCity
-          cities={
-            JSON.parse(localStorage.getItem("cities"))
-              ? JSON.parse(localStorage.getItem("cities"))
-              : []
-          }
-        />
+        <SelectCity cities={this.state.cities} />
       </Wrapper>
     );
   }
