@@ -17,9 +17,7 @@ export default class SelectCity extends Component {
     fetch(`https://ezanvakti.herokuapp.com/ilceler?sehir=${cityId}`)
       .then(res => res.json())
       .then(subCities => {
-        this.setState({
-          subCities
-        });
+        localStorage.setItem("subCities", JSON.stringify(subCities));
       });
   }
 
@@ -38,7 +36,24 @@ export default class SelectCity extends Component {
             </option>
           ))}
         </select>
-        <SelectSubCities subCities={this.state.subCities} />
+
+        <select ref="selector" onChange={e => this.chanceHandle()}>
+          <option>Select Country</option>
+          {JSON.parse(localStorage.getItem("subCities"))
+            ? JSON.parse(localStorage.getItem("subCities")).map(country => (
+                <option key={country.UlkeID} value={country.UlkeID}>
+                  {country.UlkeAdi} - {country.UlkeID}
+                </option>
+              ))
+            : ""}
+        </select>
+        <SelectSubCities
+          subCities={
+            JSON.parse(localStorage.getItem("subCities"))
+              ? JSON.parse(localStorage.getItem("subCities"))
+              : []
+          }
+        />
       </Wrapper>
     );
   }
