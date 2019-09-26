@@ -12,12 +12,14 @@ const Wrapper = styled.section`
   justify-content: center;
   align-items: center;
   background-color: bisque;
+  width: 50%;
+  padding: 3%;
 `;
 
 export default function ShowTimes({ prayerTimes }) {
   return (
     <Wrapper>
-      <h4>{prayerTimes.length > 0 ? prayerTimes[0].MiladiTarihKisa : null}</h4>
+      <h4>{prayerTimes[0].MiladiTarihKisa}</h4>
       <Table>
         <thead>
           <tr>
