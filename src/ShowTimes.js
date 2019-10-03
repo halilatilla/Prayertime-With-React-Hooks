@@ -17,9 +17,19 @@ const Wrapper = styled.section`
 `;
 
 export default function ShowTimes({ prayerTimes }) {
+  const {
+    Imsak,
+    Gunes,
+    Ogle,
+    Ikindi,
+    Aksam,
+    Yatsi,
+    MiladiTarihUzun
+  } = prayerTimes[0];
+
   return (
     <Wrapper>
-      <h4>{prayerTimes[0].MiladiTarihKisa}</h4>
+      <h4>{MiladiTarihUzun}</h4>
       <Table>
         <thead>
           <tr>
@@ -32,14 +42,16 @@ export default function ShowTimes({ prayerTimes }) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Imsak : null}</td>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Gunes : null}</td>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Ogle : null}</td>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Ikindi : null}</td>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Aksam : null}</td>
-            <td>{prayerTimes.length > 0 ? prayerTimes[0].Yatsi : null}</td>
-          </tr>
+          {prayerTimes.length > 0 ? (
+            <tr>
+              <td>{Imsak}</td>
+              <td>{Gunes}</td>
+              <td>{Ogle}</td>
+              <td>{Ikindi}</td>
+              <td>{Aksam}</td>
+              <td>{Yatsi}</td>
+            </tr>
+          ) : null}
         </tbody>
       </Table>
     </Wrapper>

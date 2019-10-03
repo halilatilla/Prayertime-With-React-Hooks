@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useRef } from "react";
 import SelectCity from "./SelectCity";
 import styled from "styled-components";
 
@@ -6,7 +6,7 @@ const Wrapper = styled.section`
   display: flex;
   justify-content: center;
 `;
-const data = [
+const localDataCountries = [
   {
     UlkeAdi: "ABD",
     UlkeAdiEn: "USA",
@@ -1033,52 +1033,35 @@ const data = [
     UlkeID: "136"
   }
 ];
-export default class SelectCountry extends Component {
-  state = {
-    data: data,
-    cities: []
-  };
+const SelectCountry = () => {
+  const [cities, setCities] = useState([]);
+  const inputRef = useRef(null);
 
-  // componentDidMount() {
-  //   //this.setState({});
-  //   /*   getCountries() {
-  //   fetch("https://ezanvakti.herokuapp.com/ulkeler")
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       this.setState({
-  //         data
-  //       });
-  //     }); */
-  // }
-
-  getCities(countryId) {
+  const getCities = countryId => {
     fetch(`https://ezanvakti.herokuapp.com/sehirler?ulke=${countryId}`)
       .then(res => res.json())
       .then(cities => {
-        this.setState({
-          cities
-        });
+        setCities(cities);
       });
-  }
-
-  chanceHandle = () => {
-    this.getCities(this.refs.selector.value);
   };
 
-  render() {
-    return (
-      <Wrapper>
-        <select ref="selector" onChange={e => this.chanceHandle()}>
-          <option>Select Country</option>
-          {this.state.data.map(country => (
-            <option key={country.UlkeID} value={country.UlkeID}>
-              {country.UlkeAdi}
-            </option>
-          ))}
-        </select>
+  const chanceHandle = () => {
+    getCities(inputRef.current.value);
+  };
 
-        <SelectCity cities={this.state.cities} />
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper>
+      <select ref={inputRef} onChange={() => chanceHandle()}>
+        <option>Select Country</option>
+        {localDataCountries.map(country => (
+          <option key={country.UlkeID} value={country.UlkeID}>
+            {country.UlkeAdi}
+          </option>
+        ))}
+      </select>
+
+      <SelectCity cities={cities} />
+    </Wrapper>
+  );
+};
+export default SelectCountry;

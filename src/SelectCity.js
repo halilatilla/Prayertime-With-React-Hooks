@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useRef } from "react";
 import SelectSubCities from "./SelectSubCities";
 import styled from "styled-components";
 
@@ -8,38 +8,35 @@ const Wrapper = styled.section`
   margin-left: 2vw;
 `;
 
-export default class SelectCity extends Component {
-  state = {
-    subCities: []
-  };
+const SelectCity = ({ cities }) => {
+  const [subCities, setsubCities] = useState([]);
+  const inputRef = useRef(null);
 
-  getSubCities(cityId) {
+  function getSubCities(cityId) {
     fetch(`https://ezanvakti.herokuapp.com/ilceler?sehir=${cityId}`)
       .then(res => res.json())
       .then(subCities => {
-        this.setState({
-          subCities
-        });
+        setsubCities(subCities);
       });
   }
 
-  chanceHandle = () => {
-    this.getSubCities(this.refs.selector.value);
+  const chanceHandle = () => {
+    getSubCities(inputRef.current.value);
   };
-  render() {
-    return (
-      <Wrapper>
-        <select ref="selector" onChange={e => this.chanceHandle()}>
-          <option>Select City</option>
 
-          {this.props.cities.map(cities => (
-            <option key={cities.SehirID} value={cities.SehirID}>
-              {cities.SehirAdi}
-            </option>
-          ))}
-        </select>
-        <SelectSubCities subCities={this.state.subCities} />
-      </Wrapper>
-    );
-  }
-}
+  return (
+    <Wrapper>
+      <select ref={inputRef} onChange={e => chanceHandle()}>
+        <option>Select City</option>
+        {cities.map(cities => (
+          <option key={cities.SehirID} value={cities.SehirID}>
+            {cities.SehirAdi}
+          </option>
+        ))}
+      </select>
+      <SelectSubCities subCities={subCities} />
+    </Wrapper>
+  );
+};
+
+export default SelectCity;
