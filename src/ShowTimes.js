@@ -17,6 +17,10 @@ const Wrapper = styled.section`
 `;
 
 export default function ShowTimes({ prayerTimes }) {
+  //localStorage.setItem("prayerTime", JSON.stringify(prayerTimes[0]));
+
+  //const localPrayerTimes = JSON.parse(localStorage.getItem("prayerTime"));
+
   const {
     Imsak,
     Gunes,

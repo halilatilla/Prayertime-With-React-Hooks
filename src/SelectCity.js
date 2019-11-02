@@ -23,10 +23,9 @@ const SelectCity = ({ cities }) => {
   const chanceHandle = () => {
     getSubCities(inputRef.current.value);
   };
-
   return (
     <Wrapper>
-      <select ref={inputRef} onChange={e => chanceHandle()}>
+      <select ref={inputRef} onChange={() => chanceHandle()}>
         <option>Select City</option>
         {cities.map(cities => (
           <option key={cities.SehirID} value={cities.SehirID}>
@@ -38,5 +37,4 @@ const SelectCity = ({ cities }) => {
     </Wrapper>
   );
 };
-
 export default SelectCity;
